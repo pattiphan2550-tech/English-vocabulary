@@ -1,1 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>English Quest</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f5f6ff;
+    color:#222;
+    transition:.3s;
+}
+
+body.dark{
+    background:#151526;
+    color:#fff;
+}
+
+header{
+    background:linear-gradient(135deg,#6547f5,#8b6cff);
+    color:white;
+    padding:18px 7%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:bold;
+}
+
+nav button{
+    background:none;
+    border:none;
+    color:white;
+    margin:0 7px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:30px 20px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.hero{
+    background:linear-gradient(135deg,#6b4df6,#9278ff);
+    color:white;
+    padding:45px;
+    border-radius:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.hero h1{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.hero p{
+    margin-bottom:20px;
+}
+
+.btn{
+    background:white;
+    color:#6346ed;
+    border:none;
+    padding:13px 22px;
+    border-radius:12px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    text-align:center;
+    box-shadow:0 5px 20px #00000010;
+}
+
+.dark .stat,
+.dark .card,
+.dark .game,
+.dark .answer{
+    background:#22223a;
+    color:white;
+}
+
+.stat span{
+    display:block;
+    color:#777;
+    margin-bottom:8px;
+}
+
+.stat strong{
+    font-size:25px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 5px 20px #00000010;
+}
+
+.card h2{
+    margin-bottom:18px;
+}
+
+.progress{
+    height:12px;
+    background:#e6e6f5;
+    border-radius:20px;
+    overflow:hidden;
+    margin:10px 0;
+}
+
+.progress-bar{
+    height:100%;
+    background:linear-gradient(90deg,#6547f5,#9b83ff);
+    width:0%;
+    transition:.5s;
+}
+
+.games{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.game{
+    border:1px solid #eee;
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    cursor:pointer;
+    text-align:left;
+    transition:.2s;
+}
+
+.game:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 25px #0002;
+}
+
+.game-icon{
+    font-size:35px;
+}
+
+.game h3{
+    margin:10px 0;
+}
+
+.game p{
+    color:#777;
+}
+
+.page-title{
+    font-size:32px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#777;
+    margin-bottom:25px;
+}
+
+.words{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.word{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:0 5px 20px #00000010;
+}
+
+.word-img{
+    font-size:60px;
+    text-align:center;
+    background:#f0edff;
+    border-radius:15px;
+    padding:15px;
+}
+
+.word h2{
+    margin-top:15px;
+}
+
+.word p{
+    color:#777;
+}
+
+.answer-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.answer{
+    background:white;
+    border:2px solid #eee;
+    padding:18px;
+    border-radius:15px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.answer:hover{
+    border-color:#6547f5;
+}
+
+.correct{
+    background:#dff9eb !important;
+    border-color:#28c987 !important;
+}
+
+.wrong{
+    background:#ffe4e8 !important;
+    border-color:#ff5d73 !important;
+}
+
+.question{
+    text-align:center;
+    margin:30px 0;
+}
+
+.question .emoji{
+    font-size:80px;
+}
+
+.question h2{
+    font-size:32px;
+    margin:15px;
+}
+
+.feedback{
+    text-align:center;
+    min-height:40px;
+    margin:15px;
+    font-weight:bold;
+}
+
+.next{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background:#6547f5;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.match{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.match button{
+    padding:17px;
+    border:2px solid #eee;
+    border-radius:15px;
+    background:white;
+    cursor:pointer;
+}
+
+.fact{
+    background:#fff8df;
+}
+
+.dark .fact{
+    background:#302d20;
+}
+
+.fact button{
+    float:right;
+    padding:8px 12px;
+    border:0;
+    border-radius:10px;
+    background:#6547f5;
+    color:white;
+}
+
+.leader{
+    display:flex;
+    justify-content:space-between;
+    padding:15px;
+    background:#f5f5ff;
+    border-radius:12px;
+    margin:8px 0;
+}
+
+.dark .leader{
+    background:#2a2a42;
+}
+
+.dark-btn{
+    padding:10px 15px;
+    border:0;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+@media(max-width:800px){
+
+    header{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .hero{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .words{
+        grid-template-columns:1fr;
+    }
+
+    .games{
+        grid-template-columns:1fr;
+    }
+
+    .answer-grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">🎮 English Quest</div>
+
+<nav>
+<button onclick="showPage('home')">🏠 Home</button>
+<button onclick="showPage('vocabulary')">📚 Vocabulary</button>
+<button onclick="showPage('grammar')">✏️ Grammar</button>
+<button onclick="showPage('games')">🎮 Games</button>
+<button onclick="showPage('daily')">🔥 Daily</button>
+<button onclick="showPage('profile')">🏆 Profile</button>
+</nav>
+
+<button class="dark-btn" onclick="darkMode()">🌙</button>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- HOME -->
+
+<section id="home" class="page active">
+
+<div class="hero">
+
+<div>
+
+<h1>English Quest 🚀</h1>
+
+<p>
+Learn English like a game!
+ฝึกภาษาอังกฤษ สนุก ง่าย และสะสม XP
+</p>
+
+<button class="btn" onclick="showPage('games')">
+Start Quest →
+</button>
+
+</div>
+
+<div style="font-size:100px">
+📚🎮
+</div>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+<span>⭐ Level</span>
+<strong id="level">1</strong>
+</div>
+
+<div class="stat">
+<span>⚡ XP</span>
+<strong id="xp">0</strong>
+</div>
+
+<div class="stat">
+<span>🔥 Streak</span>
+<strong id="streak">1</strong>
+</div>
+
+<div class="stat">
+<span>🪙 Coins</span>
+<strong id="coins">120</strong>
+</div>
+
+</div>
+
+
+<div class="grid">
+
+<div class="card">
+
+<h2>📊 Level Progress</h2>
+
+<p>
+XP: <span id="xpText">0 / 100</span>
+</p>
+
+<div class="progress">
+
+<div
+class="progress-bar"
+id="progress">
+</div>
+
+</div>
+
+
+<h2 style="margin-top:25px">
+🎮 Quick Games
+</h2>
+
+
+<div class="games">
+
+<div class="game" onclick="vocabGame()">
+
+<div class="game-icon">🧠</div>
+
+<h3>Vocabulary Game</h3>
+
+<p>ฝึกคำศัพท์และรับ XP</p>
+
+</div>
+
+
+<div class="game" onclick="wordMatch()">
+
+<div class="game-icon">🔗</div>
+
+<h3>Word Match</h3>
+
+<p>จับคู่คำศัพท์</p>
+
+</div>
+
+
+<div class="game" onclick="grammarGame()">
+
+<div class="game-icon">✏️</div>
+
+<h3>Grammar Challenge</h3>
+
+<p>ฝึก Grammar</p>
+
+</div>
+
+
+<div class="game" onclick="sentenceGame()">
+
+<div class="game-icon">🧩</div>
+
+<h3>Sentence Builder</h3>
+
+<p>เรียงประโยคภาษาอังกฤษ</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card fact">
+
+<h2>💡 English Fact</h2>
+
+<p id="fact">
+"Piece of cake" means something is very easy.
+</p>
+
+<br>
+
+<button onclick="nextFact()">
+Next Fact
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- VOCABULARY -->
+
+<section id="vocabulary" class="page">
+
+<h1 class="page-title">
+📚 Vocabulary
+</h1>
+
+<p class="subtitle">
+คำศัพท์ภาษาอังกฤษสำหรับนักเรียน
+</p>
+
+
+<div class="words">
+
+<div class="word">
+
+<div class="word-img">
+🍎
+</div>
+
+<h2>Apple</h2>
+
+<p>แอปเปิล</p>
+
+<p>
+I eat an apple every day.
+</p>
+
+<button class="btn" onclick="speak('Apple')">
+🔊 Listen
+</button>
+
+</div>
+
+
+<div class="word">
+
+<div class="word-img">
+📚
+</div>
+
+<h2>Book</h2>
+
+<p>หนังสือ</p>
+
+<p>
+I read a book.
+</p>
+
+<button class="btn" onclick="speak('Book')">
+🔊 Listen
+</button>
+
+</div>
+
+
+<div class="word">
+
+<div class="word-img">
+💻
+</div>
+
+<h2>Computer</h2>
+
+<p>คอมพิวเตอร์</p>
+
+<p>
+I use a computer.
+</p>
+
+<button class="btn" onclick="speak('Computer')">
+🔊 Listen
+</button>
+
+</div>
+
+
+<div class="word">
+
+<div class="word-img">
+👨‍🏫
+</div>
+
+<h2>Teacher</h2>
+
+<p>ครู</p>
+
+<p>
+My teacher is kind.
+</p>
+
+<button class="btn" onclick="speak('Teacher')">
+🔊 Listen
+</button>
+
+</div>
+
+
+<div class="word">
+
+<div class="word-img">
+✈️
+</div>
+
+<h2>Travel</h2>
+
+<p>การเดินทาง</p>
+
+<p>
+I love to travel.
+</p>
+
+<button class="btn" onclick="speak('Travel')">
+🔊 Listen
+</button>
+
+</div>
+
+
+<div class="word">
+
+<div class="word-img">
+😊
+</div>
+
+<h2>Happy</h2>
+
+<p>มีความสุข</p>
+
+<p>
+I am happy today.
+</p>
+
+<button class="btn" onclick="speak('Happy')">
+🔊 Listen
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- GRAMMAR -->
+
+<section id="grammar" class="page">
+
+<h1 class="page-title">
+✏️ Grammar Challenge
+</h1>
+
+<p class="subtitle">
+เลือกคำตอบที่ถูกต้อง
+</p>
+
+
+<div class="card">
+
+<div class="question">
+
+<div class="emoji">
+📝
+</div>
+
+<h2>
+She ___ to school every day.
+</h2>
+
+</div>
+
+
+<div class="answer-grid">
+
+<button class="answer"
+onclick="grammarAnswer(this,false)">
+go
+</button>
+
+<button class="answer"
+onclick="grammarAnswer(this,true)">
+goes
+</button>
+
+<button class="answer"
+onclick="grammarAnswer(this,false)">
+going
+</button>
+
+<button class="answer"
+onclick="grammarAnswer(this,false)">
+went
+</button>
+
+</div>
+
+<div id="grammarFeedback"
+class="feedback">
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- GAMES -->
+
+<section id="games" class="page">
+
+<h1 class="page-title">
+🎮 Games
+</h1>
+
+<p class="subtitle">
+เลือกเกมเพื่อรับ XP
+</p>
+
+
+<div class="card">
+
+<div id="gameArea">
+
+<h2>
+เลือกเกมด้านบนหรือจากเมนู
+</h2>
+
+<p>
+เริ่มเล่นเพื่อสะสม XP และเลื่อน Level
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- DAILY -->
+
+<section id="daily" class="page">
+
+<h1 class="page-title">
+🔥 Daily Challenge
+</h1>
+
+<p class="subtitle">
+ภารกิจประจำวัน
+</p>
+
+
+<div class="card">
+
+<div class="question">
+
+<div class="emoji">
+🌟
+</div>
+
+<h2>
+What does "Confident" mean?
+</h2>
+
+</div>
+
+
+<div class="answer-grid">
+
+<button
+class="answer"
+onclick="dailyAnswer(this,false)">
+กลัว
+</button>
+
+<button
+class="answer"
+onclick="dailyAnswer(this,true)">
+มั่นใจ
+</button>
+
+<button
+class="answer"
+onclick="dailyAnswer(this,false)">
+เหนื่อย
+</button>
+
+<button
+class="answer"
+onclick="dailyAnswer(this,false)">
+หิว
+</button>
+
+</div>
+
+<div id="dailyFeedback"
+class="feedback">
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- PROFILE -->
+
+<section id="profile" class="page">
+
+<h1 class="page-title">
+🏆 Profile
+</h1>
+
+<div class="grid">
+
+<div class="card">
+
+<h2>
+Your Progress
+</h2>
+
+<p>
+Level: <b id="profileLevel">1</b>
+</p>
+
+<p>
+XP: <b id="profileXP">0</b>
+</p>
+
+<p>
+Coins: <b id="profileCoins">120</b>
+</p>
+
+<p>
+Streak: 🔥 <b id="profileStreak">1</b> days
+</p>
+
+<br>
+
+<div class="progress">
+
+<div
+class="progress-bar"
+id="profileProgress">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>
+🏆 Leaderboard
+</h2>
+
+<div class="leader">
+<span>🥇 Alex</span>
+<b>980 XP</b>
+</div>
+
+<div class="leader">
+<span>🥈 Luna</span>
+<b>860 XP</b>
+</div>
+
+<div class="leader">
+<span>🥉 Kai</span>
+<b>790 XP</b>
+</div>
+
+<div class="leader">
+<span>👤 You</span>
+<b id="leaderXP">0 XP</b>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+let xp =
+Number(localStorage.getItem("xp")) || 0;
+
+let coins =
+Number(localStorage.getItem("coins")) || 120;
+
+let streak =
+Number(localStorage.getItem("streak")) || 1;
+
+
+function save(){
+
+localStorage.setItem("xp",xp);
+
+localStorage.setItem("coins",coins);
+
+localStorage.setItem("streak",streak);
+
+}
+
+
+function update(){
+
+let level =
+Math.floor(xp / 100) + 1;
+
+let currentXP =
+xp % 100;
+
+document.getElementById("level")
+.innerText=level;
+
+document.getElementById("xp")
+.innerText=xp;
+
+document.getElementById("coins")
+.innerText=coins;
+
+document.getElementById("streak")
+.innerText=streak;
+
+document.getElementById("xpText")
+.innerText=currentXP+" / 100";
+
+document.getElementById("progress")
+.style.width=currentXP+"%";
+
+
+document.getElementById("profileLevel")
+.innerText=level;
+
+document.getElementById("profileXP")
+.innerText=xp;
+
+document.getElementById("profileCoins")
+.innerText=coins;
+
+document.getElementById("profileStreak")
+.innerText=streak;
+
+document.getElementById("profileProgress")
+.style.width=currentXP+"%";
+
+document.getElementById("leaderXP")
+.innerText=xp+" XP";
+
+}
+
+
+function addXP(amount){
+
+let oldLevel =
+Math.floor(xp/100)+1;
+
+xp+=amount;
+
+coins+=Math.floor(amount/10);
+
+save();
+
+update();
+
+
+let newLevel =
+Math.floor(xp/100)+1;
+
+if(newLevel>oldLevel){
+
+alert("🎉 LEVEL UP!\nYou are now Level "+newLevel);
+
+}
+
+}
+
+
+function showPage(id){
+
+document
+.querySelectorAll(".page")
+.forEach(page=>{
+page.classList.remove("active");
+});
+
+document
+.getElementById(id)
+.classList.add("active");
+
+}
+
+
+
+function darkMode(){
+
+document.body.classList.toggle("dark");
+
+}
+
+
+
+function speak(word){
+
+let speech =
+new SpeechSynthesisUtterance(word);
+
+speech.lang="en-US";
+
+speechSynthesis.speak(speech);
+
+}
+
+
+
+let facts=[
+
+"Piece of cake = something very easy.",
+
+"Advice is usually uncountable.",
+
+"Actually means 'in fact'.",
+
+"Bored describes how you feel.",
+
+"Confident means feeling sure about yourself.",
+
+"Could you...? is a polite request."
+
+];
+
+
+function nextFact(){
+
+let random =
+Math.floor(Math.random()*facts.length);
+
+document.getElementById("fact")
+.innerText=facts[random];
+
+}
+
+
+
+function vocabGame(){
+
+showPage("games");
+
+let questions=[
+
+{
+word:"Apple 🍎",
+answer:"แอปเปิล",
+options:["รถ","แอปเปิล","บ้าน","หนังสือ"]
+},
+
+{
+word:"Teacher 👨‍🏫",
+answer:"ครู",
+options:["ครู","หมอ","ตำรวจ","นักเรียน"]
+},
+
+{
+word:"Computer 💻",
+answer:"คอมพิวเตอร์",
+options:["โทรศัพท์","รถ","คอมพิวเตอร์","โต๊ะ"]
+}
+
+];
+
+
+let q =
+questions[Math.floor(Math.random()*questions.length)];
+
+
+document.getElementById("gameArea").innerHTML=`
+
+<div class="question">
+
+<div class="emoji">
+${q.word}
+</div>
+
+<h2>
+What does this word mean?
+</h2>
+
+</div>
+
+<div class="answer-grid">
+
+${q.options.map(option=>`
+
+<button
+class="answer"
+onclick="vocabAnswer(this,'${option}','${q.answer}')">
+
+${option}
+
+</button>
+
+`).join("")}
+
+</div>
+
+<div id="gameFeedback"
+class="feedback">
+</div>
+
+`;
+
+}
+
+
+
+function vocabAnswer(button,answer,correct){
+
+document
+.querySelectorAll(".answer")
+.forEach(b=>b.disabled=true);
+
+
+if(answer===correct){
+
+button.classList.add("correct");
+
+document.getElementById("gameFeedback")
+.innerText="🎉 Correct! +20 XP";
+
+addXP(20);
+
+}else{
+
+button.classList.add("wrong");
+
+document.getElementById("gameFeedback")
+.innerText=
+"❌ Incorrect. Answer: "+correct;
+
+}
+
+}
+
+
+
+function grammarGame(){
+
+showPage("grammar");
+
+}
+
+
+
+function grammarAnswer(button,correct){
+
+document
+.querySelectorAll("#grammar .answer")
+.forEach(b=>b.disabled=true);
+
+
+if(correct){
+
+button.classList.add("correct");
+
+document.getElementById("grammarFeedback")
+.innerText=
+"🎉 Correct! Goes is used with She.";
+
+addXP(15);
+
+}else{
+
+button.classList.add("wrong");
+
+document.getElementById("grammarFeedback")
+.innerText=
+"❌ Incorrect. The answer is 'goes'.";
+
+}
+
+}
+
+
+
+function wordMatch(){
+
+showPage("games");
+
+
+document.getElementById("gameArea").innerHTML=`
+
+<h2>
+🔗 Word Match
+</h2>
+
+<p>
+จับคู่คำศัพท์กับคำแปล
+</p>
+
+<br>
+
+<div class="match">
+
+<button onclick="match(this,'Apple')">
+Apple
+</button>
+
+<button onclick="match(this,'Book')">
+หนังสือ
+</button>
+
+<button onclick="match(this,'Book')">
+Book
+</button>
+
+<button onclick="match(this,'Apple')">
+แอปเปิล
+</button>
+
+</div>
+
+<div id="matchFeedback"
+class="feedback">
+</div>
+
+`;
+
+}
+
+
+let selectedMatch=null;
+
+
+function match(button,value){
+
+if(!selectedMatch){
+
+selectedMatch={
+button:button,
+value:value
+};
+
+button.style.borderColor="#6547f5";
+
+return;
+
+}
+
+
+if(
+
+(selectedMatch.value==="Apple" && value==="Apple") ||
+
+(selectedMatch.value==="Book" && value==="Book")
+
+){
+
+selectedMatch.button.classList.add("correct");
+
+button.classList.add("correct");
+
+document.getElementById("matchFeedback")
+.innerText="🎉 Match Correct! +30 XP";
+
+addXP(30);
+
+}else{
+
+selectedMatch.button.classList.add("wrong");
+
+button.classList.add("wrong");
+
+document.getElementById("matchFeedback")
+.innerText="❌ Try again!";
+
+}
+
+selectedMatch=null;
+
+}
+
+
+
+function sentenceGame(){
+
+showPage("games");
+
+
+document.getElementById("gameArea").innerHTML=`
+
+<h2>
+🧩 Sentence Builder
+</h2>
+
+<p>
+เรียงคำให้เป็นประโยคที่ถูกต้อง
+</p>
+
+<br>
+
+<div class="answer-grid">
+
+<button class="answer" onclick="sentence(this,'I')">
+I
+</button>
+
+<button class="answer" onclick="sentence(this,'love')">
+love
+</button>
+
+<button class="answer" onclick="sentence(this,'English')">
+English
+</button>
+
+</div>
+
+<div id="sentenceResult"
+class="feedback">
+</div>
+
+`;
+
+}
+
+
+let sentenceWords=[];
+
+
+function sentence(button,word){
+
+sentenceWords.push(word);
+
+button.classList.add("correct");
+
+if(sentenceWords.length===3){
+
+let result=
+sentenceWords.join(" ");
+
+if(result==="I love English"){
+
+document.getElementById("sentenceResult")
+.innerText="🎉 Perfect! +25 XP";
+
+addXP(25);
+
+}else{
+
+document.getElementById("sentenceResult")
+.innerText=
+"❌ Try again. Correct sentence: I love English";
+
+}
+
+sentenceWords=[];
+
+}
+
+}
+
+
+
+function dailyAnswer(button,correct){
+
+document
+.querySelectorAll("#daily .answer")
+.forEach(b=>b.disabled=true);
+
+
+if(correct){
+
+button.classList.add("correct");
+
+document.getElementById("dailyFeedback")
+.innerText=
+"🎉 Daily Challenge Complete! +40 XP +20 Coins";
+
+xp+=40;
+
+coins+=20;
+
+streak++;
+
+save();
+
+update();
+
+}else{
+
+button.classList.add("wrong");
+
+document.getElementById("dailyFeedback")
+.innerText=
+"❌ Correct answer: มั่นใจ";
+
+}
+
+}
+
+
+update();
+
+</script>
+
+</body>
+</html>
