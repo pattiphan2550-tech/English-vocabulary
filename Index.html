@@ -3,400 +3,842 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>English Quest</title>
 
 <style>
+:root{
+ --bg:#f5f6ff;
+ --card:#ffffff;
+ --text:#202342;
+ --muted:#7b7f9d;
+ --primary:#6547f5;
+ --primary2:#8d75ff;
+ --line:#e8e8f5;
+ --green:#25c889;
+ --red:#ff5b72;
+ --yellow:#ffbd45;
+ --shadow:0 10px 30px rgba(70,60,150,.10);
+}
+
 *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial, sans-serif;
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
+ font-family:Arial,Helvetica,sans-serif;
 }
 
 body{
-    background:#f5f6ff;
-    color:#222;
-    transition:.3s;
+ background:var(--bg);
+ color:var(--text);
+ transition:.3s;
 }
 
 body.dark{
-    background:#151526;
-    color:#fff;
+ --bg:#111222;
+ --card:#1d1e31;
+ --text:#f5f5ff;
+ --muted:#aaaeca;
+ --line:#303149;
 }
 
-header{
-    background:linear-gradient(135deg,#6547f5,#8b6cff);
-    color:white;
-    padding:18px 7%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+button{
+ font-family:inherit;
+ cursor:pointer;
+}
+
+.app{
+ display:flex;
+ min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+ width:240px;
+ position:fixed;
+ left:0;
+ top:0;
+ bottom:0;
+ background:linear-gradient(180deg,#30258d,#694cf5);
+ color:white;
+ padding:22px 15px;
+ z-index:10;
 }
 
 .logo{
-    font-size:25px;
-    font-weight:bold;
+ display:flex;
+ align-items:center;
+ gap:10px;
+ font-size:22px;
+ font-weight:900;
+ padding:10px;
+ margin-bottom:25px;
 }
 
-nav button{
-    background:none;
-    border:none;
-    color:white;
-    margin:0 7px;
-    cursor:pointer;
-    font-weight:bold;
+.logo-icon{
+ font-size:28px;
 }
 
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:30px 20px;
+.nav{
+ display:flex;
+ flex-direction:column;
+ gap:7px;
 }
+
+.nav button{
+ border:0;
+ background:transparent;
+ color:#e9e6ff;
+ padding:13px 14px;
+ border-radius:13px;
+ text-align:left;
+ font-weight:bold;
+ font-size:14px;
+}
+
+.nav button:hover,
+.nav button.active{
+ background:rgba(255,255,255,.18);
+ color:white;
+}
+
+.side-bottom{
+ position:absolute;
+ left:15px;
+ right:15px;
+ bottom:20px;
+}
+
+.dark-toggle{
+ width:100%;
+ border:0;
+ background:rgba(255,255,255,.12);
+ color:white;
+ padding:12px;
+ border-radius:13px;
+}
+
+/* MAIN */
+
+.main{
+ margin-left:240px;
+ width:calc(100% - 240px);
+ padding:22px 30px 50px;
+}
+
+.topbar{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:20px;
+ gap:15px;
+}
+
+.search{
+ background:var(--card);
+ border:1px solid var(--line);
+ color:var(--text);
+ padding:12px 16px;
+ border-radius:15px;
+ width:380px;
+ outline:none;
+}
+
+.top-right{
+ display:flex;
+ gap:10px;
+}
+
+.top-pill{
+ background:var(--card);
+ border:1px solid var(--line);
+ padding:10px 14px;
+ border-radius:13px;
+ font-weight:bold;
+}
+
+/* PAGE */
 
 .page{
-    display:none;
+ display:none;
 }
 
 .page.active{
-    display:block;
-}
-
-.hero{
-    background:linear-gradient(135deg,#6b4df6,#9278ff);
-    color:white;
-    padding:45px;
-    border-radius:25px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-}
-
-.hero h1{
-    font-size:42px;
-    margin-bottom:10px;
-}
-
-.hero p{
-    margin-bottom:20px;
-}
-
-.btn{
-    background:white;
-    color:#6346ed;
-    border:none;
-    padding:13px 22px;
-    border-radius:12px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin-bottom:25px;
-}
-
-.stat{
-    background:white;
-    padding:20px;
-    border-radius:18px;
-    text-align:center;
-    box-shadow:0 5px 20px #00000010;
-}
-
-.dark .stat,
-.dark .card,
-.dark .game,
-.dark .answer{
-    background:#22223a;
-    color:white;
-}
-
-.stat span{
-    display:block;
-    color:#777;
-    margin-bottom:8px;
-}
-
-.stat strong{
-    font-size:25px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:2fr 1fr;
-    gap:20px;
-}
-
-.card{
-    background:white;
-    padding:25px;
-    border-radius:20px;
-    box-shadow:0 5px 20px #00000010;
-}
-
-.card h2{
-    margin-bottom:18px;
-}
-
-.progress{
-    height:12px;
-    background:#e6e6f5;
-    border-radius:20px;
-    overflow:hidden;
-    margin:10px 0;
-}
-
-.progress-bar{
-    height:100%;
-    background:linear-gradient(90deg,#6547f5,#9b83ff);
-    width:0%;
-    transition:.5s;
-}
-
-.games{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:15px;
-}
-
-.game{
-    border:1px solid #eee;
-    background:white;
-    padding:20px;
-    border-radius:18px;
-    cursor:pointer;
-    text-align:left;
-    transition:.2s;
-}
-
-.game:hover{
-    transform:translateY(-4px);
-    box-shadow:0 8px 25px #0002;
-}
-
-.game-icon{
-    font-size:35px;
-}
-
-.game h3{
-    margin:10px 0;
-}
-
-.game p{
-    color:#777;
+ display:block;
 }
 
 .page-title{
-    font-size:32px;
-    margin-bottom:10px;
+ font-size:32px;
+ margin-bottom:5px;
 }
 
 .subtitle{
-    color:#777;
-    margin-bottom:25px;
+ color:var(--muted);
+ margin-bottom:22px;
 }
 
-.words{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
+/* HERO */
+
+.hero{
+ background:linear-gradient(135deg,#6346f0,#9179ff);
+ color:white;
+ border-radius:28px;
+ padding:32px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ overflow:hidden;
+ box-shadow:var(--shadow);
 }
 
-.word{
-    background:white;
-    padding:20px;
-    border-radius:18px;
-    box-shadow:0 5px 20px #00000010;
+.hero h1{
+ font-size:38px;
+ margin-bottom:8px;
 }
 
-.word-img{
-    font-size:60px;
-    text-align:center;
-    background:#f0edff;
-    border-radius:15px;
-    padding:15px;
+.hero p{
+ color:#eeeaff;
+ margin-bottom:22px;
+ line-height:1.6;
 }
 
-.word h2{
-    margin-top:15px;
+.hero-art{
+ font-size:90px;
 }
 
-.word p{
-    color:#777;
+.primary-btn{
+ background:white;
+ color:#5b40dc;
+ border:0;
+ padding:13px 20px;
+ border-radius:13px;
+ font-weight:900;
 }
 
-.answer-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
+/* STATS */
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:15px;
+ margin:18px 0;
 }
 
-.answer{
-    background:white;
-    border:2px solid #eee;
-    padding:18px;
-    border-radius:15px;
-    cursor:pointer;
-    font-weight:bold;
+.stat{
+ background:var(--card);
+ border:1px solid var(--line);
+ border-radius:19px;
+ padding:18px;
+ box-shadow:var(--shadow);
 }
 
-.answer:hover{
-    border-color:#6547f5;
+.stat-icon{
+ font-size:25px;
 }
 
-.correct{
-    background:#dff9eb !important;
-    border-color:#28c987 !important;
+.stat small{
+ display:block;
+ color:var(--muted);
+ margin:7px 0;
 }
 
-.wrong{
-    background:#ffe4e8 !important;
-    border-color:#ff5d73 !important;
+.stat strong{
+ font-size:25px;
 }
 
-.question{
-    text-align:center;
-    margin:30px 0;
+/* GRID */
+
+.two-grid{
+ display:grid;
+ grid-template-columns:1.35fr .65fr;
+ gap:18px;
 }
 
-.question .emoji{
-    font-size:80px;
+.card{
+ background:var(--card);
+ border:1px solid var(--line);
+ border-radius:22px;
+ padding:22px;
+ box-shadow:var(--shadow);
 }
 
-.question h2{
-    font-size:32px;
-    margin:15px;
+.card-title{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:15px;
 }
 
-.feedback{
-    text-align:center;
-    min-height:40px;
-    margin:15px;
-    font-weight:bold;
+.progress{
+ height:11px;
+ background:#e9e9f7;
+ border-radius:99px;
+ overflow:hidden;
 }
 
-.next{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:12px;
-    background:#6547f5;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
+.progress-bar{
+ height:100%;
+ width:0%;
+ background:linear-gradient(90deg,#6547f5,#9b83ff);
+ transition:.5s;
 }
 
-.match{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
+.progress-label{
+ display:flex;
+ justify-content:space-between;
+ margin-bottom:8px;
+ color:var(--muted);
+ font-size:14px;
 }
 
-.match button{
-    padding:17px;
-    border:2px solid #eee;
-    border-radius:15px;
-    background:white;
-    cursor:pointer;
+/* GAME CARDS */
+
+.game-grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:13px;
 }
+
+.game-card{
+ background:var(--card);
+ border:1px solid var(--line);
+ border-radius:17px;
+ padding:18px;
+ text-align:left;
+ transition:.2s;
+}
+
+.game-card:hover{
+ transform:translateY(-3px);
+ box-shadow:var(--shadow);
+}
+
+.game-icon{
+ font-size:34px;
+}
+
+.game-card h3{
+ margin:9px 0 5px;
+}
+
+.game-card p{
+ color:var(--muted);
+ font-size:13px;
+}
+
+/* FACT */
 
 .fact{
-    background:#fff8df;
+ background:linear-gradient(135deg,#fff8dd,#fff);
 }
 
 .dark .fact{
-    background:#302d20;
+ background:#302c1f;
 }
 
 .fact button{
-    float:right;
-    padding:8px 12px;
-    border:0;
-    border-radius:10px;
-    background:#6547f5;
-    color:white;
+ float:right;
+ border:0;
+ background:var(--primary);
+ color:white;
+ padding:8px 12px;
+ border-radius:10px;
 }
 
-.leader{
-    display:flex;
-    justify-content:space-between;
-    padding:15px;
-    background:#f5f5ff;
-    border-radius:12px;
-    margin:8px 0;
+.fact p{
+ line-height:1.7;
+ margin-top:12px;
 }
 
-.dark .leader{
-    background:#2a2a42;
+/* VOCAB */
+
+.category-bar{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+ margin-bottom:18px;
 }
 
-.dark-btn{
-    padding:10px 15px;
-    border:0;
-    border-radius:10px;
-    cursor:pointer;
+.category{
+ border:1px solid var(--line);
+ background:var(--card);
+ color:var(--text);
+ padding:9px 14px;
+ border-radius:99px;
 }
 
-@media(max-width:800px){
+.category.active{
+ background:var(--primary);
+ color:white;
+}
 
-    header{
-        flex-direction:column;
-        gap:15px;
-    }
+.word-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:15px;
+}
 
-    .hero{
-        flex-direction:column;
-        text-align:center;
-    }
+.word-card{
+ background:var(--card);
+ border:1px solid var(--line);
+ border-radius:19px;
+ padding:17px;
+ box-shadow:var(--shadow);
+}
 
-    .stats{
-        grid-template-columns:1fr 1fr;
-    }
+.word-image{
+ height:110px;
+ border-radius:15px;
+ background:#f0edff;
+ display:grid;
+ place-items:center;
+ font-size:60px;
+}
 
-    .grid{
-        grid-template-columns:1fr;
-    }
+.dark .word-image{
+ background:#292a42;
+}
 
-    .words{
-        grid-template-columns:1fr;
-    }
+.word-card h2{
+ margin-top:13px;
+}
 
-    .games{
-        grid-template-columns:1fr;
-    }
+.word-meaning{
+ color:var(--muted);
+ margin:5px 0;
+}
 
-    .answer-grid{
-        grid-template-columns:1fr;
-    }
+.word-example{
+ font-size:13px;
+ line-height:1.5;
+}
+
+.listen{
+ margin-top:12px;
+ border:0;
+ background:#eeeaff;
+ color:var(--primary);
+ padding:8px 12px;
+ border-radius:10px;
+ font-weight:bold;
+}
+
+/* GAME SCREEN */
+
+.game-screen{
+ max-width:850px;
+ margin:auto;
+}
+
+.game-top{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.timer{
+ background:#fff0f3;
+ color:var(--red);
+ padding:9px 13px;
+ border-radius:11px;
+ font-weight:bold;
+}
+
+.question{
+ text-align:center;
+ padding:30px 15px;
+}
+
+.question-icon{
+ font-size:75px;
+}
+
+.question h2{
+ font-size:29px;
+ margin:12px 0;
+}
+
+.answers{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+}
+
+.answer{
+ background:var(--card);
+ color:var(--text);
+ border:2px solid var(--line);
+ padding:16px;
+ border-radius:15px;
+ text-align:left;
+ font-weight:bold;
+ transition:.15s;
+}
+
+.answer:hover{
+ border-color:var(--primary);
+}
+
+.answer.correct{
+ border-color:var(--green);
+ background:#e5fff4;
+}
+
+.answer.wrong{
+ border-color:var(--red);
+ background:#fff0f3;
+}
+
+.feedback{
+ text-align:center;
+ min-height:45px;
+ padding:15px;
+ font-weight:bold;
+}
+
+.next-btn{
+ width:100%;
+ padding:14px;
+ background:var(--primary);
+ color:white;
+ border:0;
+ border-radius:13px;
+ font-weight:bold;
+}
+
+/* MATCH */
+
+.match-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:14px;
+}
+
+.match-item{
+ width:100%;
+ padding:16px;
+ background:var(--card);
+ color:var(--text);
+ border:2px solid var(--line);
+ border-radius:14px;
+ font-weight:bold;
+ margin-bottom:10px;
+}
+
+.match-item.selected{
+ border-color:var(--primary);
+ background:#f0edff;
+}
+
+.match-item.matched{
+ border-color:var(--green);
+ background:#e5fff4;
+}
+
+/* SENTENCE */
+
+.word-pool{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ padding:18px;
+ background:#f4f2ff;
+ border-radius:15px;
+ min-height:70px;
+ margin-bottom:15px;
+}
+
+.dark .word-pool{
+ background:#292a42;
+}
+
+.word-chip{
+ border:1px solid var(--line);
+ background:var(--card);
+ color:var(--text);
+ padding:10px 13px;
+ border-radius:11px;
+ font-weight:bold;
+}
+
+.word-chip.used{
+ opacity:.3;
+}
+
+/* LEADERBOARD */
+
+.leaderboard{
+ display:grid;
+ gap:8px;
+}
+
+.rank{
+ display:flex;
+ justify-content:space-between;
+ padding:13px;
+ border-radius:12px;
+ background:#f4f4fc;
+}
+
+.dark .rank{
+ background:#292a42;
+}
+
+.rank.me{
+ background:#eeeaff;
+ border:1px solid var(--primary);
+}
+
+/* CALENDAR */
+
+.calendar{
+ display:grid;
+ grid-template-columns:repeat(7,1fr);
+ gap:6px;
+}
+
+.day{
+ aspect-ratio:1;
+ display:grid;
+ place-items:center;
+ background:#f0f1f8;
+ border-radius:8px;
+ font-size:12px;
+}
+
+.dark .day{
+ background:#292a42;
+}
+
+.day.done{
+ background:#dff9ed;
+ color:#12875e;
+ font-weight:bold;
+}
+
+.day.today{
+ outline:2px solid var(--primary);
+}
+
+/* CONFETTI */
+
+.confetti{
+ position:fixed;
+ inset:0;
+ pointer-events:none;
+ z-index:999;
+}
+
+.confetti-piece{
+ position:absolute;
+ width:8px;
+ height:14px;
+ animation:fall 1.6s linear forwards;
+}
+
+@keyframes fall{
+ to{
+  transform:translateY(100vh) rotate(720deg);
+  opacity:0;
+ }
+}
+
+/* TOAST */
+
+.toast{
+ position:fixed;
+ right:20px;
+ bottom:20px;
+ background:#25243c;
+ color:white;
+ padding:13px 17px;
+ border-radius:13px;
+ opacity:0;
+ transform:translateY(15px);
+ transition:.3s;
+ z-index:1000;
+}
+
+.toast.show{
+ opacity:1;
+ transform:translateY(0);
+}
+
+/* MOBILE */
+
+@media(max-width:950px){
+
+.sidebar{
+ width:72px;
+ padding:18px 9px;
+}
+
+.logo{
+ justify-content:center;
+}
+
+.logo-text,
+.nav-text,
+.dark-text{
+ display:none;
+}
+
+.nav button{
+ text-align:center;
+ font-size:19px;
+}
+
+.main{
+ margin-left:72px;
+ width:calc(100% - 72px);
+ padding:18px;
+}
+
+.stats{
+ grid-template-columns:repeat(2,1fr);
+}
+
+.two-grid{
+ grid-template-columns:1fr;
+}
+
+.word-grid{
+ grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+@media(max-width:600px){
+
+.main{
+ padding:12px;
+}
+
+.topbar{
+ justify-content:flex-end;
+}
+
+.search{
+ display:none;
+}
+
+.hero{
+ padding:25px;
+ text-align:center;
+ flex-direction:column;
+}
+
+.hero h1{
+ font-size:29px;
+}
+
+.hero-art{
+ font-size:60px;
+}
+
+.stats{
+ gap:9px;
+}
+
+.stat{
+ padding:13px;
+}
+
+.stat strong{
+ font-size:20px;
+}
+
+.game-grid,
+.answers,
+.word-grid{
+ grid-template-columns:1fr;
+}
+
+.page-title{
+ font-size:26px;
+}
+
 }
 </style>
 </head>
 
 <body>
 
-<header>
+<div class="app">
 
-<div class="logo">🎮 English Quest</div>
+<!-- SIDEBAR -->
 
-<nav>
-<button onclick="showPage('home')">🏠 Home</button>
-<button onclick="showPage('vocabulary')">📚 Vocabulary</button>
-<button onclick="showPage('grammar')">✏️ Grammar</button>
-<button onclick="showPage('games')">🎮 Games</button>
-<button onclick="showPage('daily')">🔥 Daily</button>
-<button onclick="showPage('profile')">🏆 Profile</button>
-</nav>
+<aside class="sidebar">
 
-<button class="dark-btn" onclick="darkMode()">🌙</button>
+<div class="logo">
+<span class="logo-icon">🎮</span>
+<span class="logo-text">English Quest</span>
+</div>
 
-</header>
+<div class="nav">
+
+<button class="active" onclick="showPage('home',this)">
+🏠 <span class="nav-text">Home</span>
+</button>
+
+<button onclick="showPage('vocabulary',this)">
+📚 <span class="nav-text">Vocabulary</span>
+</button>
+
+<button onclick="showPage('grammar',this)">
+✏️ <span class="nav-text">Grammar</span>
+</button>
+
+<button onclick="showPage('games',this)">
+🎮 <span class="nav-text">Games</span>
+</button>
+
+<button onclick="showPage('daily',this)">
+🔥 <span class="nav-text">Daily Challenge</span>
+</button>
+
+<button onclick="showPage('profile',this)">
+🏆 <span class="nav-text">Profile</span>
+</button>
+
+</div>
+
+<div class="side-bottom">
+
+<button class="dark-toggle" onclick="toggleDark()">
+🌙 <span class="dark-text">Dark Mode</span>
+</button>
+
+</div>
+
+</aside>
 
 
-<div class="container">
+<!-- MAIN -->
+
+<main class="main">
+
+<div class="topbar">
+
+<input
+class="search"
+id="search"
+placeholder="🔎 Search vocabulary..."
+>
+
+<div class="top-right">
+
+<div class="top-pill">
+🪙 <span id="topCoins">120</span>
+</div>
+
+<div class="top-pill">
+⚡ <span id="topXP">0</span> XP
+</div>
+
+</div>
+
+</div>
 
 
 <!-- HOME -->
@@ -407,21 +849,22 @@ nav button{
 
 <div>
 
-<h1>English Quest 🚀</h1>
+<h1>Ready for your next quest?</h1>
 
 <p>
-Learn English like a game!
-ฝึกภาษาอังกฤษ สนุก ง่าย และสะสม XP
+Learn English through fun games,
+challenges and mini quests.
 </p>
 
-<button class="btn" onclick="showPage('games')">
-Start Quest →
+<button class="primary-btn"
+onclick="showPage('games')">
+Start a Quest →
 </button>
 
 </div>
 
-<div style="font-size:100px">
-📚🎮
+<div class="hero-art">
+🚀📖
 </div>
 
 </div>
@@ -430,97 +873,127 @@ Start Quest →
 <div class="stats">
 
 <div class="stat">
-<span>⭐ Level</span>
+
+<div class="stat-icon">⭐</div>
+
+<small>Level</small>
+
 <strong id="level">1</strong>
+
 </div>
 
+
 <div class="stat">
-<span>⚡ XP</span>
+
+<div class="stat-icon">⚡</div>
+
+<small>Total XP</small>
+
 <strong id="xp">0</strong>
+
 </div>
 
-<div class="stat">
-<span>🔥 Streak</span>
-<strong id="streak">1</strong>
-</div>
 
 <div class="stat">
-<span>🪙 Coins</span>
+
+<div class="stat-icon">🔥</div>
+
+<small>Streak</small>
+
+<strong id="streak">1 day</strong>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-icon">🪙</div>
+
+<small>Coins</small>
+
 <strong id="coins">120</strong>
-</div>
 
 </div>
 
+</div>
 
-<div class="grid">
+
+<div class="two-grid">
 
 <div class="card">
 
-<h2>📊 Level Progress</h2>
+<div class="card-title">
 
-<p>
-XP: <span id="xpText">0 / 100</span>
-</p>
+<h2>Level Progress</h2>
+
+<b id="progressText">
+0 / 100 XP
+</b>
+
+</div>
 
 <div class="progress">
-
-<div
-class="progress-bar"
-id="progress">
+<div class="progress-bar" id="progress"></div>
 </div>
 
-</div>
+<p style="color:var(--muted);margin-top:8px">
+Complete quests to unlock new levels.
+</p>
 
 
-<h2 style="margin-top:25px">
-🎮 Quick Games
+<h2 style="margin:25px 0 15px">
+Quick Games
 </h2>
 
 
-<div class="games">
+<div class="game-grid">
 
-<div class="game" onclick="vocabGame()">
+<button class="game-card"
+onclick="startVocab()">
 
 <div class="game-icon">🧠</div>
 
 <h3>Vocabulary Game</h3>
 
-<p>ฝึกคำศัพท์และรับ XP</p>
+<p>Choose the correct meaning.</p>
 
-</div>
+</button>
 
 
-<div class="game" onclick="wordMatch()">
+<button class="game-card"
+onclick="startMatch()">
 
 <div class="game-icon">🔗</div>
 
 <h3>Word Match</h3>
 
-<p>จับคู่คำศัพท์</p>
+<p>Match words and meanings.</p>
 
-</div>
+</button>
 
 
-<div class="game" onclick="grammarGame()">
+<button class="game-card"
+onclick="startGrammar()">
 
 <div class="game-icon">✏️</div>
 
 <h3>Grammar Challenge</h3>
 
-<p>ฝึก Grammar</p>
+<p>Easy / Medium / Hard.</p>
 
-</div>
+</button>
 
 
-<div class="game" onclick="sentenceGame()">
+<button class="game-card"
+onclick="startSentence()">
 
 <div class="game-icon">🧩</div>
 
 <h3>Sentence Builder</h3>
 
-<p>เรียงประโยคภาษาอังกฤษ</p>
+<p>Build the correct sentence.</p>
 
-</div>
+</button>
 
 </div>
 
@@ -529,24 +1002,23 @@ id="progress">
 
 <div class="card fact">
 
-<h2>💡 English Fact</h2>
+<div class="card-title">
 
-<p id="fact">
-"Piece of cake" means something is very easy.
-</p>
-
-<br>
+<h3>💡 English Fact</h3>
 
 <button onclick="nextFact()">
-Next Fact
+Next
 </button>
+
+</div>
+
+<p id="fact"></p>
 
 </div>
 
 </div>
 
 </section>
-
 
 
 <!-- VOCABULARY -->
@@ -558,141 +1030,46 @@ Next Fact
 </h1>
 
 <p class="subtitle">
-คำศัพท์ภาษาอังกฤษสำหรับนักเรียน
+Learn useful English words.
 </p>
 
+<div class="category-bar">
 
-<div class="words">
+<button class="category active"
+onclick="filterWords('All',this)">
+All
+</button>
 
-<div class="word">
+<button class="category"
+onclick="filterWords('School',this)">
+School
+</button>
 
-<div class="word-img">
-🍎
-</div>
+<button class="category"
+onclick="filterWords('Food',this)">
+Food
+</button>
 
-<h2>Apple</h2>
+<button class="category"
+onclick="filterWords('Technology',this)">
+Technology
+</button>
 
-<p>แอปเปิล</p>
+<button class="category"
+onclick="filterWords('Travel',this)">
+Travel
+</button>
 
-<p>
-I eat an apple every day.
-</p>
-
-<button class="btn" onclick="speak('Apple')">
-🔊 Listen
+<button class="category"
+onclick="filterWords('Daily Life',this)">
+Daily Life
 </button>
 
 </div>
 
-
-<div class="word">
-
-<div class="word-img">
-📚
-</div>
-
-<h2>Book</h2>
-
-<p>หนังสือ</p>
-
-<p>
-I read a book.
-</p>
-
-<button class="btn" onclick="speak('Book')">
-🔊 Listen
-</button>
-
-</div>
-
-
-<div class="word">
-
-<div class="word-img">
-💻
-</div>
-
-<h2>Computer</h2>
-
-<p>คอมพิวเตอร์</p>
-
-<p>
-I use a computer.
-</p>
-
-<button class="btn" onclick="speak('Computer')">
-🔊 Listen
-</button>
-
-</div>
-
-
-<div class="word">
-
-<div class="word-img">
-👨‍🏫
-</div>
-
-<h2>Teacher</h2>
-
-<p>ครู</p>
-
-<p>
-My teacher is kind.
-</p>
-
-<button class="btn" onclick="speak('Teacher')">
-🔊 Listen
-</button>
-
-</div>
-
-
-<div class="word">
-
-<div class="word-img">
-✈️
-</div>
-
-<h2>Travel</h2>
-
-<p>การเดินทาง</p>
-
-<p>
-I love to travel.
-</p>
-
-<button class="btn" onclick="speak('Travel')">
-🔊 Listen
-</button>
-
-</div>
-
-
-<div class="word">
-
-<div class="word-img">
-😊
-</div>
-
-<h2>Happy</h2>
-
-<p>มีความสุข</p>
-
-<p>
-I am happy today.
-</p>
-
-<button class="btn" onclick="speak('Happy')">
-🔊 Listen
-</button>
-
-</div>
-
-</div>
+<div class="word-grid" id="wordGrid"></div>
 
 </section>
-
 
 
 <!-- GRAMMAR -->
@@ -704,57 +1081,33 @@ I am happy today.
 </h1>
 
 <p class="subtitle">
-เลือกคำตอบที่ถูกต้อง
+Test your grammar skills.
 </p>
 
+<div class="category-bar">
 
-<div class="card">
-
-<div class="question">
-
-<div class="emoji">
-📝
-</div>
-
-<h2>
-She ___ to school every day.
-</h2>
-
-</div>
-
-
-<div class="answer-grid">
-
-<button class="answer"
-onclick="grammarAnswer(this,false)">
-go
+<button class="category active"
+onclick="loadGrammar('Easy',this)">
+Easy
 </button>
 
-<button class="answer"
-onclick="grammarAnswer(this,true)">
-goes
+<button class="category"
+onclick="loadGrammar('Medium',this)">
+Medium
 </button>
 
-<button class="answer"
-onclick="grammarAnswer(this,false)">
-going
-</button>
-
-<button class="answer"
-onclick="grammarAnswer(this,false)">
-went
+<button class="category"
+onclick="loadGrammar('Hard',this)">
+Hard
 </button>
 
 </div>
 
-<div id="grammarFeedback"
-class="feedback">
-</div>
-
+<div class="card game-screen"
+id="grammarBox">
 </div>
 
 </section>
-
 
 
 <!-- GAMES -->
@@ -766,28 +1119,71 @@ class="feedback">
 </h1>
 
 <p class="subtitle">
-เลือกเกมเพื่อรับ XP
+Choose a mini game and earn XP.
 </p>
 
+<div class="game-grid">
 
-<div class="card">
+<button class="game-card"
+onclick="startVocab()">
 
-<div id="gameArea">
+<div class="game-icon">🧠</div>
 
-<h2>
-เลือกเกมด้านบนหรือจากเมนู
-</h2>
+<h3>Vocabulary Game</h3>
 
-<p>
-เริ่มเล่นเพื่อสะสม XP และเลื่อน Level
-</p>
+<p>5 questions · timer</p>
+
+</button>
+
+<button class="game-card"
+onclick="startMatch()">
+
+<div class="game-icon">🔗</div>
+
+<h3>Word Match</h3>
+
+<p>Build your combo</p>
+
+</button>
+
+<button class="game-card"
+onclick="startGrammar()">
+
+<div class="game-icon">✏️</div>
+
+<h3>Grammar Challenge</h3>
+
+<p>Test your grammar</p>
+
+</button>
+
+<button class="game-card"
+onclick="startSentence()">
+
+<div class="game-icon">🧩</div>
+
+<h3>Sentence Builder</h3>
+
+<p>Arrange the words</p>
+
+</button>
 
 </div>
+
+
+<div class="card game-screen"
+style="margin-top:20px"
+id="gameBox">
+
+<h2>Choose a game</h2>
+
+<p style="color:var(--muted)">
+Your XP and coins will update automatically.
+</p>
 
 </div>
 
 </section>
-
 
 
 <!-- DAILY -->
@@ -799,61 +1195,14 @@ class="feedback">
 </h1>
 
 <p class="subtitle">
-ภารกิจประจำวัน
+Complete today's challenge for bonus XP and coins.
 </p>
 
-
-<div class="card">
-
-<div class="question">
-
-<div class="emoji">
-🌟
-</div>
-
-<h2>
-What does "Confident" mean?
-</h2>
-
-</div>
-
-
-<div class="answer-grid">
-
-<button
-class="answer"
-onclick="dailyAnswer(this,false)">
-กลัว
-</button>
-
-<button
-class="answer"
-onclick="dailyAnswer(this,true)">
-มั่นใจ
-</button>
-
-<button
-class="answer"
-onclick="dailyAnswer(this,false)">
-เหนื่อย
-</button>
-
-<button
-class="answer"
-onclick="dailyAnswer(this,false)">
-หิว
-</button>
-
-</div>
-
-<div id="dailyFeedback"
-class="feedback">
-</div>
-
+<div class="card game-screen"
+id="dailyBox">
 </div>
 
 </section>
-
 
 
 <!-- PROFILE -->
@@ -861,40 +1210,49 @@ class="feedback">
 <section id="profile" class="page">
 
 <h1 class="page-title">
-🏆 Profile
+🏆 Your Quest
 </h1>
 
-<div class="grid">
+<p class="subtitle">
+Track your progress and streak.
+</p>
+
+<div class="two-grid">
 
 <div class="card">
 
-<h2>
-Your Progress
-</h2>
+<h2>📊 Progress</h2>
 
-<p>
-Level: <b id="profileLevel">1</b>
+<p>Level:
+<b id="profileLevel">1</b>
 </p>
 
-<p>
-XP: <b id="profileXP">0</b>
+<p style="margin-top:10px">
+Total XP:
+<b id="profileXP">0</b>
 </p>
 
-<p>
-Coins: <b id="profileCoins">120</b>
+<p style="margin-top:10px">
+Coins:
+<b id="profileCoins">120</b>
 </p>
 
-<p>
-Streak: 🔥 <b id="profileStreak">1</b> days
+<p style="margin-top:10px">
+🔥 Streak:
+<b id="profileStreak">1</b> days
 </p>
 
-<br>
+<div style="margin-top:20px">
+
+<div class="progress-label">
+<span>Level Progress</span>
+<span id="profileProgressText">0%</span>
+</div>
 
 <div class="progress">
-
-<div
-class="progress-bar"
+<div class="progress-bar"
 id="profileProgress">
+</div>
 </div>
 
 </div>
@@ -904,26 +1262,40 @@ id="profileProgress">
 
 <div class="card">
 
-<h2>
-🏆 Leaderboard
-</h2>
+<h2>🔥 Streak Calendar</h2>
 
-<div class="leader">
-<span>🥇 Alex</span>
+<div class="calendar"
+id="calendar">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card"
+style="margin-top:20px">
+
+<h2>🏆 Leaderboard</h2>
+
+<div class="leaderboard">
+
+<div class="rank">
+<span>🥇 Nova</span>
 <b>980 XP</b>
 </div>
 
-<div class="leader">
-<span>🥈 Luna</span>
+<div class="rank">
+<span>🥈 Pixel</span>
 <b>860 XP</b>
 </div>
 
-<div class="leader">
-<span>🥉 Kai</span>
+<div class="rank">
+<span>🥉 Luna</span>
 <b>790 XP</b>
 </div>
 
-<div class="leader">
+<div class="rank me">
 <span>👤 You</span>
 <b id="leaderXP">0 XP</b>
 </div>
@@ -934,107 +1306,355 @@ id="profileProgress">
 
 </section>
 
+</main>
+
 </div>
+
+
+<div class="toast" id="toast"></div>
+
+<div class="confetti" id="confetti"></div>
 
 
 <script>
 
-let xp =
-Number(localStorage.getItem("xp")) || 0;
+/* =========================
+   DATA
+========================= */
 
-let coins =
-Number(localStorage.getItem("coins")) || 120;
+const words=[
 
-let streak =
-Number(localStorage.getItem("streak")) || 1;
+{
+word:"Beautiful",
+meaning:"สวยงาม",
+emoji:"🌸",
+category:"Daily Life",
+example:"She has a beautiful smile."
+},
+
+{
+word:"Apple",
+meaning:"แอปเปิล",
+emoji:"🍎",
+category:"Food",
+example:"I eat an apple every day."
+},
+
+{
+word:"Book",
+meaning:"หนังสือ",
+emoji:"📚",
+category:"School",
+example:"I read a book."
+},
+
+{
+word:"Teacher",
+meaning:"ครู",
+emoji:"👨‍🏫",
+category:"School",
+example:"My teacher is kind."
+},
+
+{
+word:"Computer",
+meaning:"คอมพิวเตอร์",
+emoji:"💻",
+category:"Technology",
+example:"I use a computer."
+},
+
+{
+word:"Keyboard",
+meaning:"แป้นพิมพ์",
+emoji:"⌨️",
+category:"Technology",
+example:"My keyboard is new."
+},
+
+{
+word:"Travel",
+meaning:"การเดินทาง",
+emoji:"✈️",
+category:"Travel",
+example:"I love to travel."
+},
+
+{
+word:"Adventure",
+meaning:"การผจญภัย",
+emoji:"🗺️",
+category:"Travel",
+example:"We went on an adventure."
+},
+
+{
+word:"Happy",
+meaning:"มีความสุข",
+emoji:"😊",
+category:"Daily Life",
+example:"I am happy today."
+},
+
+{
+word:"Breakfast",
+meaning:"อาหารเช้า",
+emoji:"🍳",
+category:"Food",
+example:"I eat breakfast every morning."
+},
+
+{
+word:"Healthy",
+meaning:"สุขภาพดี",
+emoji:"🥗",
+category:"Daily Life",
+example:"Fruit is healthy."
+},
+
+{
+word:"Library",
+meaning:"ห้องสมุด",
+emoji:"🏫",
+category:"School",
+example:"I study in the library."
+}
+
+];
+
+
+const facts=[
+
+"“Piece of cake” means something is very easy.",
+
+"“Advice” is usually uncountable. Say “some advice”.",
+
+"“Actually” often means “in fact”.",
+
+"“Bored” describes how you feel. “Boring” describes something.",
+
+"“Could you...?” is a polite way to make a request.",
+
+"“Confident” means feeling sure about yourself."
+
+];
+
+
+const grammar={
+
+Easy:[
+
+{
+q:"She ___ to school every day.",
+options:["go","goes","going","went"],
+answer:1,
+ex:"With She/He/It in the present simple, use -s or -es."
+},
+
+{
+q:"I ___ a student.",
+options:["am","is","are","be"],
+answer:0,
+ex:"Use “am” with I."
+},
+
+{
+q:"They ___ football yesterday.",
+options:["play","plays","played","playing"],
+answer:2,
+ex:"“Yesterday” indicates the past simple."
+}
+
+],
+
+Medium:[
+
+{
+q:"If it rains, I ___ at home.",
+options:["stay","stayed","will stay","staying"],
+answer:2,
+ex:"First conditional: If + present, will + verb."
+},
+
+{
+q:"She has ___ her homework.",
+options:["finish","finished","finishing","finishes"],
+answer:1,
+ex:"Present perfect uses has/have + past participle."
+},
+
+{
+q:"We have lived here ___ 2020.",
+options:["for","since","during","at"],
+answer:1,
+ex:"Use “since” with a starting point."
+}
+
+],
+
+Hard:[
+
+{
+q:"By next year, I ___ English for five years.",
+options:[
+"study",
+"will study",
+"will have studied",
+"studied"
+],
+answer:2,
+ex:"Future perfect uses will have + past participle."
+},
+
+{
+q:"Had I known, I ___ you.",
+options:[
+"tell",
+"would tell",
+"would have told",
+"will tell"
+],
+answer:2,
+ex:"Third conditional uses would have + past participle."
+},
+
+{
+q:"The book, ___ was written in 1999, is still popular.",
+options:[
+"who",
+"which",
+"where",
+"what"
+],
+answer:1,
+ex:"Use which for things."
+}
+
+]
+
+};
+
+
+/* =========================
+   STATE
+========================= */
+
+let state=
+JSON.parse(
+localStorage.getItem("englishQuest")
+)||{
+
+xp:0,
+coins:120,
+streak:1,
+completedDays:[],
+dailyDone:false
+
+};
 
 
 function save(){
 
-localStorage.setItem("xp",xp);
-
-localStorage.setItem("coins",coins);
-
-localStorage.setItem("streak",streak);
-
-}
-
-
-function update(){
-
-let level =
-Math.floor(xp / 100) + 1;
-
-let currentXP =
-xp % 100;
-
-document.getElementById("level")
-.innerText=level;
-
-document.getElementById("xp")
-.innerText=xp;
-
-document.getElementById("coins")
-.innerText=coins;
-
-document.getElementById("streak")
-.innerText=streak;
-
-document.getElementById("xpText")
-.innerText=currentXP+" / 100";
-
-document.getElementById("progress")
-.style.width=currentXP+"%";
-
-
-document.getElementById("profileLevel")
-.innerText=level;
-
-document.getElementById("profileXP")
-.innerText=xp;
-
-document.getElementById("profileCoins")
-.innerText=coins;
-
-document.getElementById("profileStreak")
-.innerText=streak;
-
-document.getElementById("profileProgress")
-.style.width=currentXP+"%";
-
-document.getElementById("leaderXP")
-.innerText=xp+" XP";
+localStorage.setItem(
+"englishQuest",
+JSON.stringify(state)
+);
 
 }
 
 
-function addXP(amount){
+function level(){
 
-let oldLevel =
-Math.floor(xp/100)+1;
+return Math.floor(state.xp/100)+1;
 
-xp+=amount;
+}
 
-coins+=Math.floor(amount/10);
+
+function addXP(amount,coins=0){
+
+const oldLevel=level();
+
+state.xp+=amount;
+state.coins+=coins;
 
 save();
+updateUI();
 
-update();
+showToast(
+`+${amount} XP ${coins?`· +${coins} 🪙`:""}`
+);
 
+if(level()>oldLevel){
 
-let newLevel =
-Math.floor(xp/100)+1;
+confetti();
 
-if(newLevel>oldLevel){
-
-alert("🎉 LEVEL UP!\nYou are now Level "+newLevel);
+showToast(
+`🎉 Level Up! Level ${level()}`
+);
 
 }
 
 }
 
 
-function showPage(id){
+function updateUI(){
+
+const lv=level();
+
+const current=state.xp%100;
+
+document.getElementById("level").textContent=lv;
+
+document.getElementById("xp").textContent=state.xp;
+
+document.getElementById("coins").textContent=state.coins;
+
+document.getElementById("streak").textContent=
+state.streak+" day";
+
+document.getElementById("topXP").textContent=
+state.xp;
+
+document.getElementById("topCoins").textContent=
+state.coins;
+
+document.getElementById("progress").style.width=
+current+"%";
+
+document.getElementById("progressText").textContent=
+`${current} / 100 XP`;
+
+document.getElementById("profileLevel").textContent=
+lv;
+
+document.getElementById("profileXP").textContent=
+state.xp;
+
+document.getElementById("profileCoins").textContent=
+state.coins;
+
+document.getElementById("profileStreak").textContent=
+state.streak;
+
+document.getElementById("profileProgress").style.width=
+current+"%";
+
+document.getElementById("profileProgressText").textContent=
+current+"%";
+
+document.getElementById("leaderXP").textContent=
+state.xp+" XP";
+
+renderCalendar();
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showPage(id,button){
 
 document
 .querySelectorAll(".page")
@@ -1046,112 +1666,355 @@ document
 .getElementById(id)
 .classList.add("active");
 
+document
+.querySelectorAll(".nav button")
+.forEach(btn=>{
+btn.classList.remove("active");
+});
+
+if(button){
+button.classList.add("active");
+}
+
+if(id==="daily"){
+renderDaily();
+}
+
+if(id==="profile"){
+renderCalendar();
+}
+
 }
 
 
+/* =========================
+   DARK MODE
+========================= */
 
-function darkMode(){
+function toggleDark(){
 
 document.body.classList.toggle("dark");
 
+localStorage.setItem(
+"englishQuestDark",
+document.body.classList.contains("dark")
+);
+
 }
 
+
+if(
+localStorage.getItem("englishQuestDark")==="true"
+){
+document.body.classList.add("dark");
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+function showToast(message){
+
+const toast=
+document.getElementById("toast");
+
+toast.textContent=message;
+
+toast.classList.add("show");
+
+setTimeout(()=>{
+toast.classList.remove("show");
+},1800);
+
+}
+
+
+/* =========================
+   CONFETTI
+========================= */
+
+function confetti(){
+
+const box=
+document.getElementById("confetti");
+
+box.innerHTML="";
+
+const colors=[
+"#6547f5",
+"#ffbd45",
+"#25c889",
+"#ff5b72",
+"#4da3ff"
+];
+
+for(let i=0;i<80;i++){
+
+const p=document.createElement("div");
+
+p.className="confetti-piece";
+
+p.style.left=
+Math.random()*100+"%";
+
+p.style.top=
+(-10-Math.random()*20)+"%";
+
+p.style.background=
+colors[i%colors.length];
+
+p.style.animationDelay=
+Math.random()*.5+"s";
+
+box.appendChild(p);
+
+}
+
+setTimeout(()=>{
+box.innerHTML="";
+},2000);
+
+}
+
+
+/* =========================
+   VOCABULARY
+========================= */
+
+function renderWords(category="All",search=""){
+
+const grid=
+document.getElementById("wordGrid");
+
+let list=words.filter(item=>{
+
+const matchCategory=
+category==="All"||
+item.category===category;
+
+const matchSearch=
+!search||
+item.word.toLowerCase()
+.includes(search.toLowerCase())||
+item.meaning.includes(search);
+
+return matchCategory&&matchSearch;
+
+});
+
+
+grid.innerHTML=list.map(item=>`
+
+<div class="word-card">
+
+<div class="word-image">
+${item.emoji}
+</div>
+
+<h2>${item.word}</h2>
+
+<div class="word-meaning">
+${item.meaning}
+</div>
+
+<div class="word-example">
+${item.example}
+</div>
+
+<button class="listen"
+onclick="speak('${item.word}')">
+
+🔊 Listen
+
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+
+function filterWords(category,button){
+
+document
+.querySelectorAll(".category")
+.forEach(x=>{
+x.classList.remove("active");
+});
+
+button.classList.add("active");
+
+renderWords(category);
+
+}
+
+
+document
+.getElementById("search")
+.addEventListener("input",function(){
+
+showPage("vocabulary");
+
+renderWords("All",this.value);
+
+});
 
 
 function speak(word){
 
-let speech =
+if("speechSynthesis" in window){
+
+speechSynthesis.cancel();
+
+const speech=
 new SpeechSynthesisUtterance(word);
 
 speech.lang="en-US";
+
+speech.rate=.9;
 
 speechSynthesis.speak(speech);
 
 }
 
+}
 
 
-let facts=[
-
-"Piece of cake = something very easy.",
-
-"Advice is usually uncountable.",
-
-"Actually means 'in fact'.",
-
-"Bored describes how you feel.",
-
-"Confident means feeling sure about yourself.",
-
-"Could you...? is a polite request."
-
-];
-
+/* =========================
+   FACT
+========================= */
 
 function nextFact(){
 
-let random =
-Math.floor(Math.random()*facts.length);
+const fact=
+facts[Math.floor(Math.random()*facts.length)];
 
-document.getElementById("fact")
-.innerText=facts[random];
+document.getElementById("fact").textContent=fact;
 
 }
 
 
+/* =========================
+   VOCAB GAME
+========================= */
 
-function vocabGame(){
+let vocabIndex=0;
+let vocabScore=0;
+let vocabTimer=null;
+let vocabTime=15;
+
+function startVocab(){
 
 showPage("games");
 
-let questions=[
+vocabIndex=0;
+vocabScore=0;
 
-{
-word:"Apple 🍎",
-answer:"แอปเปิล",
-options:["รถ","แอปเปิล","บ้าน","หนังสือ"]
-},
+drawVocab();
 
-{
-word:"Teacher 👨‍🏫",
-answer:"ครู",
-options:["ครู","หมอ","ตำรวจ","นักเรียน"]
-},
-
-{
-word:"Computer 💻",
-answer:"คอมพิวเตอร์",
-options:["โทรศัพท์","รถ","คอมพิวเตอร์","โต๊ะ"]
 }
 
-];
 
+function drawVocab(){
 
-let q =
-questions[Math.floor(Math.random()*questions.length)];
+const box=
+document.getElementById("gameBox");
 
+if(vocabIndex>=5){
 
-document.getElementById("gameArea").innerHTML=`
+box.innerHTML=`
 
 <div class="question">
 
-<div class="emoji">
-${q.word}
+<div class="question-icon">
+🏆
 </div>
 
-<h2>
+<h2>Quest Complete!</h2>
+
+<p>
+Score: <b>${vocabScore}/5</b>
+</p>
+
+</div>
+
+<button class="next-btn"
+onclick="startVocab()">
+Play Again
+</button>
+
+`;
+
+addXP(vocabScore*10,vocabScore*2);
+
+return;
+
+}
+
+
+const item=
+words[
+Math.floor(Math.random()*words.length)
+];
+
+
+let options=[
+item.meaning
+];
+
+while(options.length<4){
+
+let random=
+words[
+Math.floor(Math.random()*words.length)
+].meaning;
+
+if(!options.includes(random)){
+options.push(random);
+}
+
+}
+
+options.sort(()=>Math.random()-.5);
+
+vocabTime=15;
+
+box.innerHTML=`
+
+<div class="game-top">
+
+<b>
+Question ${vocabIndex+1}/5
+</b>
+
+<span class="timer">
+⏱ <span id="timer">${vocabTime}</span>s
+</span>
+
+</div>
+
+<div class="question">
+
+<div class="question-icon">
+${item.emoji}
+</div>
+
+<h2>${item.word}</h2>
+
+<p style="color:var(--muted)">
 What does this word mean?
-</h2>
+</p>
 
 </div>
 
-<div class="answer-grid">
+<div class="answers">
 
-${q.options.map(option=>`
+${options.map(option=>`
 
-<button
-class="answer"
-onclick="vocabAnswer(this,'${option}','${q.answer}')">
+<button class="answer"
+onclick="answerVocab(this,'${option}','${item.meaning}')">
 
 ${option}
 
@@ -1161,124 +2024,380 @@ ${option}
 
 </div>
 
-<div id="gameFeedback"
-class="feedback">
+<div class="feedback"
+id="vocabFeedback">
 </div>
 
 `;
 
+clearInterval(vocabTimer);
+
+vocabTimer=setInterval(()=>{
+
+vocabTime--;
+
+const timer=
+document.getElementById("timer");
+
+if(timer){
+timer.textContent=vocabTime;
+}
+
+if(vocabTime<=0){
+
+clearInterval(vocabTimer);
+
+document
+.querySelectorAll("#gameBox .answer")
+.forEach(btn=>btn.disabled=true);
+
+document.getElementById("vocabFeedback")
+.textContent="⏰ Time's up!";
+
+setTimeout(()=>{
+
+vocabIndex++;
+drawVocab();
+
+},800);
+
+}
+
+},1000);
+
 }
 
 
+function answerVocab(button,selected,correct){
 
-function vocabAnswer(button,answer,correct){
+clearInterval(vocabTimer);
 
 document
-.querySelectorAll(".answer")
-.forEach(b=>b.disabled=true);
+.querySelectorAll("#gameBox .answer")
+.forEach(btn=>btn.disabled=true);
 
-
-if(answer===correct){
+if(selected===correct){
 
 button.classList.add("correct");
 
-document.getElementById("gameFeedback")
-.innerText="🎉 Correct! +20 XP";
+vocabScore++;
 
-addXP(20);
+document.getElementById("vocabFeedback")
+.textContent=
+"🎉 Correct! +10 XP";
 
 }else{
 
 button.classList.add("wrong");
 
-document.getElementById("gameFeedback")
-.innerText=
-"❌ Incorrect. Answer: "+correct;
+document.getElementById("vocabFeedback")
+.textContent=
+"❌ Correct answer: "+correct;
 
 }
 
-}
+setTimeout(()=>{
 
+vocabIndex++;
 
+drawVocab();
 
-function grammarGame(){
-
-showPage("grammar");
-
-}
-
-
-
-function grammarAnswer(button,correct){
-
-document
-.querySelectorAll("#grammar .answer")
-.forEach(b=>b.disabled=true);
-
-
-if(correct){
-
-button.classList.add("correct");
-
-document.getElementById("grammarFeedback")
-.innerText=
-"🎉 Correct! Goes is used with She.";
-
-addXP(15);
-
-}else{
-
-button.classList.add("wrong");
-
-document.getElementById("grammarFeedback")
-.innerText=
-"❌ Incorrect. The answer is 'goes'.";
-
-}
+},900);
 
 }
 
 
+/* =========================
+   WORD MATCH
+========================= */
 
-function wordMatch(){
+function startMatch(){
 
 showPage("games");
 
+const selected=
+words.slice(0,4)
+.sort(()=>Math.random()-.5);
 
-document.getElementById("gameArea").innerHTML=`
+const left=[...selected];
 
-<h2>
-🔗 Word Match
-</h2>
+const right=[...selected]
+.sort(()=>Math.random()-.5);
 
-<p>
-จับคู่คำศัพท์กับคำแปล
-</p>
+let first=null;
+let matched=0;
+let combo=0;
 
-<br>
+const box=
+document.getElementById("gameBox");
 
-<div class="match">
+box.innerHTML=`
 
-<button onclick="match(this,'Apple')">
-Apple
-</button>
+<div class="game-top">
 
-<button onclick="match(this,'Book')">
-หนังสือ
-</button>
+<h2>🔗 Word Match</h2>
 
-<button onclick="match(this,'Book')">
-Book
-</button>
-
-<button onclick="match(this,'Apple')">
-แอปเปิล
-</button>
+<b>
+Combo: <span id="combo">0</span>
+</b>
 
 </div>
 
-<div id="matchFeedback"
-class="feedback">
+<p style="color:var(--muted);margin:12px 0">
+Click a word, then click its meaning.
+</p>
+
+<div class="match-grid">
+
+<div>
+
+${left.map(x=>`
+
+<button
+class="match-item"
+data-word="${x.word}"
+data-type="word">
+
+${x.word}
+
+</button>
+
+`).join("")}
+
+</div>
+
+<div>
+
+${right.map(x=>`
+
+<button
+class="match-item"
+data-word="${x.word}"
+data-type="meaning">
+
+${x.meaning}
+
+</button>
+
+`).join("")}
+
+</div>
+
+</div>
+
+<div
+class="feedback"
+id="matchFeedback">
+</div>
+
+`;
+
+document
+.querySelectorAll(".match-item")
+.forEach(button=>{
+
+button.onclick=()=>{
+
+if(button.classList.contains("matched"))
+return;
+
+if(!first){
+
+first=button;
+
+button.classList.add("selected");
+
+return;
+
+}
+
+const correct=
+first.dataset.word===button.dataset.word &&
+first.dataset.type!==button.dataset.type;
+
+if(correct){
+
+first.classList.remove("selected");
+
+first.classList.add("matched");
+
+button.classList.add("matched");
+
+matched++;
+
+combo++;
+
+document.getElementById("combo")
+.textContent=combo;
+
+document.getElementById("matchFeedback")
+.textContent=
+"✨ Match Correct!";
+
+if(matched===4){
+
+setTimeout(()=>{
+
+document.getElementById("matchFeedback")
+.textContent=
+"🏆 All matched! +60 XP";
+
+addXP(60,15);
+
+},500);
+
+}
+
+}else{
+
+combo=0;
+
+document.getElementById("combo")
+.textContent=0;
+
+document.getElementById("matchFeedback")
+.textContent=
+"❌ Not a match. Try again.";
+
+first.classList.remove("selected");
+
+}
+
+first=null;
+
+};
+
+});
+
+}
+
+
+/* =========================
+   GRAMMAR
+========================= */
+
+let grammarLevel="Easy";
+let grammarIndex=0;
+let grammarScore=0;
+
+function startGrammar(){
+
+showPage("grammar");
+
+grammarLevel="Easy";
+grammarIndex=0;
+grammarScore=0;
+
+loadGrammar("Easy");
+
+}
+
+
+function loadGrammar(levelName,button){
+
+grammarLevel=levelName;
+
+grammarIndex=0;
+grammarScore=0;
+
+if(button){
+
+document
+.querySelectorAll("#grammar .category")
+.forEach(x=>{
+x.classList.remove("active");
+});
+
+button.classList.add("active");
+
+}
+
+drawGrammar();
+
+}
+
+
+function drawGrammar(){
+
+const box=
+document.getElementById("grammarBox");
+
+const list=
+grammar[grammarLevel];
+
+if(grammarIndex>=list.length){
+
+box.innerHTML=`
+
+<div class="question">
+
+<div class="question-icon">
+🎓
+</div>
+
+<h2>${grammarLevel} Complete!</h2>
+
+<p>
+Score:
+<b>${grammarScore}/${list.length}</b>
+</p>
+
+</div>
+
+<button class="next-btn"
+onclick="startGrammar()">
+Try Again
+</button>
+
+`;
+
+addXP(grammarScore*15,grammarScore*3);
+
+return;
+
+}
+
+const q=list[grammarIndex];
+
+box.innerHTML=`
+
+<div class="game-top">
+
+<b>
+${grammarLevel}
+</b>
+
+<span>
+${grammarIndex+1}/${list.length}
+</span>
+
+</div>
+
+<div class="question">
+
+<h2>
+${q.q}
+</h2>
+
+</div>
+
+<div class="answers">
+
+${q.options.map((option,index)=>`
+
+<button class="answer"
+onclick="answerGrammar(this,${index},${q.answer})">
+
+${option}
+
+</button>
+
+`).join("")}
+
+</div>
+
+<div class="feedback"
+id="grammarFeedback">
 </div>
 
 `;
@@ -1286,94 +2405,315 @@ class="feedback">
 }
 
 
-let selectedMatch=null;
+function answerGrammar(button,index,correct){
+
+const q=
+grammar[grammarLevel][grammarIndex];
+
+document
+.querySelectorAll("#grammarBox .answer")
+.forEach(btn=>btn.disabled=true);
+
+if(index===correct){
+
+button.classList.add("correct");
+
+grammarScore++;
+
+document.getElementById("grammarFeedback")
+.innerHTML=
+"✅ Correct! "+q.ex;
+
+}else{
+
+button.classList.add("wrong");
+
+document.getElementById("grammarFeedback")
+.innerHTML=
+"❌ Answer: <b>"+
+q.options[correct]+
+"</b><br>"+q.ex;
+
+}
+
+setTimeout(()=>{
+
+grammarIndex++;
+
+drawGrammar();
+
+},1100);
+
+}
 
 
-function match(button,value){
+/* =========================
+   SENTENCE BUILDER
+========================= */
 
-if(!selectedMatch){
+const sentences=[
 
-selectedMatch={
-button:button,
-value:value
-};
+["I","love","learning","English"],
 
-button.style.borderColor="#6547f5";
+["She","is","reading","a","book"],
+
+["They","play","football","every","day"]
+
+];
+
+let sentenceIndex=0;
+let sentenceAnswer=[];
+
+function startSentence(){
+
+showPage("games");
+
+sentenceIndex=0;
+
+drawSentence();
+
+}
+
+
+function drawSentence(){
+
+const box=
+document.getElementById("gameBox");
+
+if(sentenceIndex>=sentences.length){
+
+box.innerHTML=`
+
+<div class="question">
+
+<div class="question-icon">
+🧩
+</div>
+
+<h2>Sentence Master!</h2>
+
+<p>
+Great job completing the challenge.
+</p>
+
+</div>
+
+<button class="next-btn"
+onclick="startSentence()">
+Play Again
+</button>
+
+`;
+
+addXP(60,12);
+
+return;
+
+}
+
+sentenceAnswer=[];
+
+const sentence=
+sentences[sentenceIndex];
+
+const shuffled=
+[...sentence]
+.sort(()=>Math.random()-.5);
+
+box.innerHTML=`
+
+<div class="game-top">
+
+<b>
+Sentence ${sentenceIndex+1}/${sentences.length}
+</b>
+
+<span>
++20 XP
+</span>
+
+</div>
+
+<h3 style="margin:20px 0 10px">
+Build the correct sentence:
+</h3>
+
+<div
+class="word-pool"
+id="sentenceAnswer">
+</div>
+
+<div
+class="word-pool"
+id="sentencePool">
+
+${shuffled.map((word,index)=>`
+
+<button
+class="word-chip"
+onclick="chooseWord(this,'${word}')">
+
+${word}
+
+</button>
+
+`).join("")}
+
+</div>
+
+<div
+class="feedback"
+id="sentenceFeedback">
+</div>
+
+`;
+
+
+}
+
+
+function chooseWord(button,word){
+
+if(button.classList.contains("used"))
+return;
+
+button.classList.add("used");
+
+sentenceAnswer.push(word);
+
+document.getElementById("sentenceAnswer")
+.innerHTML=
+sentenceAnswer.map(word=>
+`<span class="word-chip">${word}</span>`
+).join("");
+
+if(
+sentenceAnswer.length===
+sentences[sentenceIndex].length
+){
+
+const correct=
+sentenceAnswer.join(" ")===
+sentences[sentenceIndex].join(" ");
+
+if(correct){
+
+document.getElementById("sentenceFeedback")
+.textContent=
+"🎉 Perfect! +20 XP";
+
+addXP(20,4);
+
+}else{
+
+document.getElementById("sentenceFeedback")
+.textContent=
+"❌ Try again. Correct: "+
+sentences[sentenceIndex].join(" ");
+
+}
+
+setTimeout(()=>{
+
+sentenceIndex++;
+
+drawSentence();
+
+},1200);
+
+}
+
+}
+
+
+/* =========================
+   DAILY CHALLENGE
+========================= */
+
+function todayKey(){
+
+return new Date()
+.toISOString()
+.slice(0,10);
+
+}
+
+
+function renderDaily(){
+
+const box=
+document.getElementById("dailyBox");
+
+if(state.completedDays.includes(todayKey())){
+
+box.innerHTML=`
+
+<div class="question">
+
+<div class="question-icon">
+✅
+</div>
+
+<h2>Daily Challenge Complete!</h2>
+
+<p>
+Great job! Come back tomorrow.
+</p>
+
+</div>
+
+`;
 
 return;
 
 }
 
 
-if(
+box.innerHTML=`
 
-(selectedMatch.value==="Apple" && value==="Apple") ||
+<div class="question">
 
-(selectedMatch.value==="Book" && value==="Book")
-
-){
-
-selectedMatch.button.classList.add("correct");
-
-button.classList.add("correct");
-
-document.getElementById("matchFeedback")
-.innerText="🎉 Match Correct! +30 XP";
-
-addXP(30);
-
-}else{
-
-selectedMatch.button.classList.add("wrong");
-
-button.classList.add("wrong");
-
-document.getElementById("matchFeedback")
-.innerText="❌ Try again!";
-
-}
-
-selectedMatch=null;
-
-}
-
-
-
-function sentenceGame(){
-
-showPage("games");
-
-
-document.getElementById("gameArea").innerHTML=`
+<div class="question-icon">
+🌟
+</div>
 
 <h2>
-🧩 Sentence Builder
+What does “confident” mean?
 </h2>
 
-<p>
-เรียงคำให้เป็นประโยคที่ถูกต้อง
+<p style="color:var(--muted)">
+Choose the correct meaning.
 </p>
 
-<br>
+</div>
 
-<div class="answer-grid">
+<div class="answers">
 
-<button class="answer" onclick="sentence(this,'I')">
-I
+<button class="answer"
+onclick="dailyAnswer(this,false)">
+กลัว
 </button>
 
-<button class="answer" onclick="sentence(this,'love')">
-love
+<button class="answer"
+onclick="dailyAnswer(this,true)">
+มั่นใจ
 </button>
 
-<button class="answer" onclick="sentence(this,'English')">
-English
+<button class="answer"
+onclick="dailyAnswer(this,false)">
+เหนื่อย
+</button>
+
+<button class="answer"
+onclick="dailyAnswer(this,false)">
+หิว
 </button>
 
 </div>
 
-<div id="sentenceResult"
-class="feedback">
+<div
+class="feedback"
+id="dailyFeedback">
 </div>
 
 `;
@@ -1381,74 +2721,36 @@ class="feedback">
 }
 
 
-let sentenceWords=[];
-
-
-function sentence(button,word){
-
-sentenceWords.push(word);
-
-button.classList.add("correct");
-
-if(sentenceWords.length===3){
-
-let result=
-sentenceWords.join(" ");
-
-if(result==="I love English"){
-
-document.getElementById("sentenceResult")
-.innerText="🎉 Perfect! +25 XP";
-
-addXP(25);
-
-}else{
-
-document.getElementById("sentenceResult")
-.innerText=
-"❌ Try again. Correct sentence: I love English";
-
-}
-
-sentenceWords=[];
-
-}
-
-}
-
-
-
 function dailyAnswer(button,correct){
 
 document
-.querySelectorAll("#daily .answer")
-.forEach(b=>b.disabled=true);
-
+.querySelectorAll("#dailyBox .answer")
+.forEach(btn=>btn.disabled=true);
 
 if(correct){
 
 button.classList.add("correct");
 
 document.getElementById("dailyFeedback")
-.innerText=
-"🎉 Daily Challenge Complete! +40 XP +20 Coins";
+.textContent=
+"🎉 Daily Challenge Complete!";
 
-xp+=40;
+state.completedDays.push(todayKey());
 
-coins+=20;
-
-streak++;
+state.streak++;
 
 save();
 
-update();
+addXP(40,20);
+
+renderDaily();
 
 }else{
 
 button.classList.add("wrong");
 
 document.getElementById("dailyFeedback")
-.innerText=
+.textContent=
 "❌ Correct answer: มั่นใจ";
 
 }
@@ -1456,7 +2758,71 @@ document.getElementById("dailyFeedback")
 }
 
 
-update();
+/* =========================
+   CALENDAR
+========================= */
+
+function renderCalendar(){
+
+const calendar=
+document.getElementById("calendar");
+
+if(!calendar)
+return;
+
+let html="";
+
+for(let i=27;i>=0;i--){
+
+const date=new Date();
+
+date.setDate(
+date.getDate()-i
+);
+
+const key=
+date.toISOString().slice(0,10);
+
+const day=
+date.getDate();
+
+const done=
+state.completedDays.includes(key);
+
+const today=
+i===0;
+
+html+=`
+
+<div
+class="day
+${done?"done":""}
+${today?"today":""}">
+
+${day}
+
+</div>
+
+`;
+
+}
+
+calendar.innerHTML=html;
+
+}
+
+
+/* =========================
+   INIT
+========================= */
+
+renderWords();
+
+nextFact();
+
+renderDaily();
+
+updateUI();
 
 </script>
 
